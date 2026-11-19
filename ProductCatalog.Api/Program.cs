@@ -35,7 +35,23 @@ app.MapGet("/health", () => Results.Ok(new
 }))
 .WithName("HealthCheck");
 
-// 2. Endpoints (listing des produits et ajout d’un produit)
+app.MapGet("/api/get-product/{id:int}", async (int id, AppDbContext db) =>
+{
+    var product = await db.Products.AsNoTracking().
+
+    FirstOrDefaultAsync(p => p.Id == id);
+
+    if (product is null)
+    {
+        return Results.NotFound(new
+        {
+            message = $"Aucun produit trouvé avec l'identifiant {id}."
+        });
+    }
+    return Results.Ok(product);
+})
+.WithName("GetProductById");
+
 app.MapGet("/api/products", async (AppDbContext db) =>
 await db.Products.AsNoTracking().ToListAsync())
 .WithName("GetAllProducts");
