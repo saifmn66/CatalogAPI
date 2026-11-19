@@ -42,6 +42,7 @@ app.MapGet("/health", () =>
 })
 .WithName("HealthCheck");
 
+
 // Get product by ID
 app.MapGet("/api/get-product/{id:int}", async (int id, AppDbContext db) =>
 {
